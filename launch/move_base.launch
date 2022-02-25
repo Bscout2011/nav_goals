@@ -1,0 +1,22 @@
+<launch>
+    <master auto="start"/>
+    
+    <arg name="initial_pose_x"    default="48.1" />
+    <arg name="initial_pose_y"    default="8.6" />
+<!-- Run the map server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find nav_goals)/map/at_one.pgm 0.05"/>
+
+    <!-- Run AMCL -->
+    <include file="$(find nav_goals)/launch/amcl_omni.launch"> 
+	<!--arg name="initial_pose_x" value="$(arg initial_pose_x)" /--> 
+        <!--arg name="initial_pose_y" value="$(arg initial_pose_y)" /-->
+    </include>
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find nav_goals)/config/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+        <rosparam file="$(find nav_goals)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find nav_goals)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find nav_goals)/config/global_costmap_params.yaml" command="load" /> 
+        <rosparam file="$(find nav_goals)/config/base_local_planner_params.yaml" command="load" />
+    </node>
+</launch>
