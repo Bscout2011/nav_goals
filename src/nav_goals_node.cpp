@@ -12,12 +12,12 @@ typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseCl
 string phrases[] = {
     "01_Intro.wav",
     "02_Stop_Arrival.wav",
-    "03_Packaged_Delivered.wav",
+    "03_Package_Delivered.wav",
     "04_Trouble_Navigating.wav",
     "05_Finish.wav"
 };
 
-string base_sound_path = "/home/alw/Phrases/";
+string base_sound_path = "/home/jr2/Phrases/";
 
 void sleepok(int t, ros::NodeHandle &nh)
 {
@@ -40,14 +40,14 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "simple_navigation_goals");
     ros::NodeHandle nh;
     // tell action client spin a thread by default
-    MoveBaseClient ac("move_base", true);
+    // MoveBaseClient ac("move_base", true);
     sound_play::SoundClient sc;
     // wait for action server to come up
-    while(!ac.waitForServer(ros::Duration(5.0))) {
-        ROS_INFO("Waiting for the move_base action server to come up");
-    }
+    // while(!ac.waitForServer(ros::Duration(5.0))) {
+    //     ROS_INFO("Waiting for the move_base action server to come up");
+    // }
     
-
+    sleepok(1, nh);
     // Initialize move_base goal message
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "map";
@@ -90,7 +90,8 @@ int main(int argc, char** argv)
         goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(yaw[i]);
 
         string wav = base_sound_path + phrases[i];
-        sc.playWave(wav, 0.5);
+        sc.playWave(wav);
+        ROS_INFO("Playing [%d] %s", i, wav.c_str());
         sleepok(4, nh);
         sc.stopWave(wav);
 
