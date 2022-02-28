@@ -1,0 +1,4 @@
+<launch>
+    <node name="soundplay_node" pkg="sound_play" type="soundplay_node.py"/>
+    <node name="nav_goals_node" pkg="nav_goals" type="nav_goals_node"/>
+</launch>

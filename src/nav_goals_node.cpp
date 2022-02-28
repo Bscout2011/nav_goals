@@ -37,17 +37,6 @@ struct place_t {
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "simple_navigation_goals");
-    ros::NodeHandle nh;
-    // tell action client spin a thread by default
-    MoveBaseClient ac("move_base", true);
-    sound_play::SoundClient sc;
-    // wait for action server to come up
-    while(!ac.waitForServer(ros::Duration(5.0))) {
-        ROS_INFO("Waiting for the move_base action server to come up");
-    }
-    
-    sleepok(1, nh);
     // Initialize move_base goal message
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "map";
@@ -82,6 +71,22 @@ int main(int argc, char** argv)
     //     "Student Worker room",
     //     "Emergency Exit door"
     // };
+    
+    
+    ros::init(argc, argv, "simple_navigation_goals");
+    ros::NodeHandle nh;
+    // tell action client spin a thread by default
+    MoveBaseClient ac("move_base", true);
+    sound_play::SoundClient sc;
+    // wait for action server to come up
+    while(!ac.waitForServer(ros::Duration(5.0))) {
+        ROS_INFO("Waiting for the move_base action server to come up");
+    }
+    
+    sleepok(1, nh);
+    ROS_INFO("Nav_goals Ready. Press Enter to begin.");
+    std::cin;
+    
 
     while(nh.ok()) {
         goal.target_pose.header.stamp = ros::Time::now();

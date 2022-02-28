@@ -1,8 +1,7 @@
 <launch>
     <master auto="start"/>
     
-    <arg name="initial_pose_x"    default="48.1" />
-    <arg name="initial_pose_y"    default="8.6" />
+    
 <!-- Run the map server -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(find nav_goals)/map/at_one.pgm 0.05"/>
 
