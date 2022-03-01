@@ -1,8 +1,11 @@
 <launch>
     <master auto="start"/>
     
+    <arg name="base_global_planner" default="navfn/NavfnROS"/>
+    <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS"/>
+    <!-- <arg name="base_local_planner" default="base_local_planner/TrajectoryPlannerROS"/> -->
     
-<!-- Run the map server -->
+    <!-- Run the map server -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(find nav_goals)/map/at_one.pgm 0.05"/>
 
     <!-- Run AMCL -->
@@ -12,10 +15,13 @@
     </include>
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-        <rosparam file="$(find nav_goals)/config/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
-        <rosparam file="$(find nav_goals)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
-        <rosparam file="$(find nav_goals)/config/local_costmap_params.yaml" command="load" />
-        <rosparam file="$(find nav_goals)/config/global_costmap_params.yaml" command="load" /> 
-        <rosparam file="$(find nav_goals)/config/base_local_planner_params.yaml" command="load" />
+        <rosparam file="$(find nav_goals)/config/costmap_common.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find nav_goals)/config/costmap_common.yaml" command="load" ns="local_costmap" />   
+        <!-- local costmap, needs size -->
+        <rosparam file="$(find husky_navigation)/config/costmap_local.yaml" command="load" ns="local_costmap" />
+        <param name="local_costmap/width" value="10.0"/>
+        <param name="local_costmap/height" value="10.0"/>
+        <!-- static global costmap, static map provides size -->
+        <rosparam file="$(find husky_navigation)/config/costmap_global_static.yaml" command="load" ns="global_costmap"/>
     </node>
 </launch>
